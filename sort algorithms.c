@@ -6,7 +6,7 @@
 #include <math.h>
 
 //bubble sort
-/*
+
 void organizabubble(int *V, int N){
     int aux;
     int aux2;
@@ -29,10 +29,10 @@ void organizabubble(int *V, int N){
         N--;
     }while(troca);
 }
-*/
+
 
 //Selection Sort
-/*
+
 void organizaSelection(int *V, int N){
 
     int aux;
@@ -59,9 +59,9 @@ void organizaSelection(int *V, int N){
     }
 }
 
-*/
+
 //Insertion Sort
-/*
+
 void organizaInsertion(int *V, int N){
 
     int aux;
@@ -78,10 +78,10 @@ void organizaInsertion(int *V, int N){
         V[j+1] = aux;
     }
 }
-*/
+
 
 //merge sort
-/*
+
 void mergesort(int *V, int inicio, int fim){
 
     int meio;
@@ -141,7 +141,7 @@ int merge(int *V, int inicio, int meio, int fim){
 
 }
 
-*/
+
 
 //quick sort
 
