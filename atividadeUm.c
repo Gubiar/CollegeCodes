@@ -1,10 +1,9 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <stdbool.h>
-
+#include "ordenacao.h"
 int comparacoes;  //varaivel global que armazena as comparaçoes realizadas por cada sort
-int trocas;
+int trocas; //varaivel que armazena quantas trocas foram feitas ao longo do processo de sort
+
+clock_t ticks[4];
+double tempo;
 
 //bubble sort
 void organizabubble(int *V, int N){
@@ -18,6 +17,7 @@ void organizabubble(int *V, int N){
 
             aux = V[i];
             aux2 = V[i+1];
+
             if(aux > aux2){
                 comparacoes++;
                 trocas++;
@@ -25,12 +25,8 @@ void organizabubble(int *V, int N){
                 V[i+1] = aux;
                 troca = true;
             }
-            for (int k = 0; k < 10 ; ++k) {
-                printf("%d \t", V[k]);
-            }printf("\n");
         }
         N--;
-
     }while(troca);
 }
 
@@ -59,11 +55,6 @@ void organizaSelection(int *V, int N){
             V[min] = aux;
             trocas++;
         }
-
-        for (int k = 0; k < 10 ; ++k) {
-            printf("%d \t", V[k]);
-
-        }printf("\n");
     }
 }
 
@@ -84,10 +75,6 @@ void organizaInsertion(int *V, int N){
             j--;
         }
         V[j+1] = aux;
-        for (int k = 0; k < 10 ; ++k) {
-            printf("%d \t", V[k]);
-
-        }printf("\n");
     }
 }
 
@@ -178,11 +165,6 @@ int particiona(int *V, int inicio, int fim){
             V[esquerda] = V[direita];
             V[direita] = aux;
         }
-
-        for (int k = 0; k < 10 ; ++k) {
-            printf("%d \t", V[k]);
-
-        }printf("\n");
     }
     trocas++;
     V[inicio] = V[direita];
@@ -227,10 +209,6 @@ void criaHeap(int *V, int pai, int fim){
             comparacoes++;
             filho = fim+1;
         }
-        for (int k = 0; k < 10 ; ++k) {
-            printf("%d \t", V[k]);
-
-        }printf("\n");
     }//while
     V[pai] = aux;
 }//função
@@ -251,10 +229,157 @@ void heapSort(int *V, int tamanho){
     }
 }
 
-int main() {
-    int vetor[10] = {66, 9, 61, 75, 38, 30, 33, 14, 85, 69};
-    heapSort(vetor, 10);
-    printf("Quantidade de Comparações: %i \n", comparacoes);
-    printf("Quantidade de trocas: %i \n", trocas);
+int main (int argc, char *argv[]){
+
+    ticks[0] = clock();//Pega o tempo antes
+
+    if(argc <3){
+        printf("Argumentos insuficientes como parâmetros de entrada para execução do programa. \n");
+        printf("Deve-se usar o padrão: nome do programa tipo de organização nome do arquivo. \n");
+        printf("Exemplo: ordenador q dados.txt \n");
+        return false;
+    }
+
+    FILE *arq = NULL;
+    int tamanho = 0;
+
+    printf("Arquivo a ser ordenado: %s \n", argv[2]);
+    arq = fopen(argv[2], "r");
+    if(arq == NULL){
+        printf("Arquivo inexistente ou não pode ser aberto.\nVerifique se o nome do arquivo passado está no formato 'arquivo.txt'");
+        return false;
+    }
+    fscanf(arq, "%d", &tamanho);
+    printf("Números ordenados: %i \n", tamanho);
+    int *V;
+
+    V= (int *) malloc(tamanho * sizeof(int));
+
+    for (int i = 0; i < tamanho; ++i) {
+        fscanf(arq, "%i", &V[i]);
+    }
+    fclose(arq);
+
+    ticks[2] = clock();//Pega o tempo antes da ordenação
+    switch (argv[1][0]){
+
+        case 'b':
+            organizabubble(V,tamanho);
+            printf("Quantidade de Comparações: %i \n", comparacoes);
+            printf("Quantidade de trocas: %i \n", trocas);
+            arq = NULL;
+            arq = fopen("dados_bubblesort.txt", "w");
+
+            if(arq == NULL){
+                printf("Erro ao abrir o arquivo de saida...");
+                return false;
+            }else printf("Arquivo ordenado: dados_bubblesort.txt\n");
+
+            for (int j = 0; j <tamanho ; ++j) {
+                fprintf(arq,"%i \n", V[j]);
+            }
+            fclose(arq);
+            break;//bubble sort
+
+        case 'q':
+            quicksort(V, 0, tamanho);
+            printf("Quantidade de Comparações: %i \n", comparacoes);
+            printf("Quantidade de trocas: %i \n", trocas);
+            arq = NULL;
+            arq = fopen("dados_quicksort.txt", "w");
+
+            if(arq == NULL){
+                printf("Erro ao abrir o arquivo de saida...");
+                return false;
+            }else printf("Arquivo ordenado: dados_quicksort.txt\n");
+
+            for (int j = 0; j <tamanho ; ++j) {
+                fprintf(arq,"%i \n", V[j]);
+            }
+            fclose(arq);
+            break;  //quicksort
+
+        case 'm':
+            mergesort(V, 0, tamanho);
+            printf("Quantidade de Comparações: %i \n", comparacoes);
+            printf("Quantidade de trocas: %i \n", trocas);
+            arq = NULL;
+            arq = fopen("dados_mergesort.txt", "w");
+
+            if(arq == NULL){
+                printf("Erro ao abrir o arquivo de saida...");
+                return false;
+            }else printf("Arquivo ordenado: dados_mergesort.txt\n");
+
+            for (int j = 0; j <tamanho ; ++j) {
+                fprintf(arq,"%i \n", V[j]);
+            }
+            fclose(arq);
+            break;  //merge sort
+
+        case 's':
+            organizaSelection(V, tamanho);
+            printf("Quantidade de Comparações: %i \n", comparacoes);
+            printf("Quantidade de trocas: %i \n", trocas);
+            arq = NULL;
+            arq = fopen("dados_selectionsort.txt", "w");
+
+            if(arq == NULL){
+                printf("Erro ao abrir o arquivo de saida...");
+                return false;
+            }else printf("Arquivo ordenado: dados_selectionsort.txt\n");
+
+            for (int j = 0; j <tamanho ; ++j) {
+                fprintf(arq,"%i \n", V[j]);
+            }
+            fclose(arq);
+            break;   //selection sort
+
+        case 'i':
+            organizaInsertion(V, tamanho);
+            printf("Quantidade de Comparações: %i \n", comparacoes);
+            printf("Quantidade de trocas: %i \n", trocas);
+            arq = NULL;
+            arq = fopen("dados_insertionsort.txt", "w");
+
+            if(arq == NULL){
+                printf("Erro ao abrir o arquivo de saida...");
+                return false;
+            }else printf("Arquivo ordenado: dados_insertionsort.txt\n");
+
+            for (int j = 0; j <tamanho ; ++j) {
+                fprintf(arq,"%i \n", V[j]);
+            }
+            fclose(arq);
+            break;  //insertion sort
+
+        case 'h':
+            heapSort(V, tamanho);
+            printf("Quantidade de Comparações: %i \n", comparacoes);
+            printf("Quantidade de trocas: %i \n", trocas);
+            arq = NULL;
+            arq = fopen("dados_heapsort.txt", "w");
+
+            if(arq == NULL){
+                printf("Erro ao abrir o arquivo de saida...");
+                return false;
+            }else printf("Arquivo ordenado: dados_heapsort.txt\n");
+
+            for (int j = 0; j <tamanho ; ++j) {
+                fprintf(arq,"%i \n", V[j]);
+            }
+            fclose(arq);
+            break;  //heap sort
+    }
+
+    ticks[1] = clock();// Pega o tempo depois
+    ticks[3] = clock();//Pega o tempo depois da ordenação
+
+    tempo = (double)(ticks[3] - ticks[2])*1000 / (CLOCKS_PER_SEC);
+    printf("Tempo gasto para ordenar: %6.3f ms.\n", tempo);
+
+    tempo = (double)(ticks[1] - ticks[0])*1000 / (CLOCKS_PER_SEC);
+    printf("Tempo gasto total: %6.3f ms.\n", tempo);
+
     return 0;
 }
