@@ -1,22 +1,20 @@
 #include <stdio.h>
+#include <stdio_ext.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
-#include <time.h>
 #include <stdbool.h>
 
-
 typedef struct{
-  char *nome;
-  char *endereco;
-  int idade;
-  char *curso;
+    char *nome;
+    char *endereco;
+    int idade;
+    char *curso;
 }Aluno;
 
-int main(){
+int main() {
 
- Aluno cadastro[1];
- char buffer[100];
+    Aluno cadastro[1];
+    char buffer[100];
 
     for (size_t i = 0; i < 1 ; ++i) {
 
@@ -49,18 +47,14 @@ int main(){
         strcpy(cadastro[i].curso, buffer);
         __fpurge(stdin);
 
-        fprintf(arq, "%-50.50s|", cadastro[i].nome);
-        fprintf(arq, "%-5i|", cadastro[i].idade);
-        fprintf(arq, "%-50.50s|", cadastro[i].endereco);
-        fprintf(arq, "%-50.50s|", cadastro[i].curso);
+        fprintf(arq, "%-50.50s", cadastro[i].nome);
+        fprintf(arq, "%-5i", cadastro[i].idade);
+        fprintf(arq, "%-50.50s", cadastro[i].endereco);
+        fprintf(arq, "%-50.50s", cadastro[i].curso);
         fprintf(arq, "\n");
 
         fflush(arq);
         fclose(arq);
 
     }
-
-
-
-return 0;
 }
